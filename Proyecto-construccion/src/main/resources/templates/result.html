@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Resultado — Braille</title>
+    <link rel="stylesheet" href="/styles.css" />
+</head>
+
+<body>
+<main>
+    <h1>Transcripción</h1>
+
+    <p>Texto original: <strong th:text="${textoOriginal}"></strong></p>
+
+
+    <div class="braille-container" th:utext="${resultadoBraille}">
+    </div>
+
+    <p class="acciones">
+        <a href="/">Nueva transcripción</a> —
+        <button onclick="window.print()">Imprimir</button>
+    </p>
+</main>
+</body>
+</html>

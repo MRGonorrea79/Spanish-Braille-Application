@@ -9,8 +9,8 @@ Abre en tu navegador: `http://localhost:8080`
 3. El resultado en Braille aparecerá en la página de resultados.
 
 ### Ejemplo
-- Entrada: "hola mundo"
-- Salida esperada: (representación Braille según la implementación)
+- Entrada: "Ejemplo: ¡Hola, mundo! 123"
+- Salida esperada: ⠨⠑⠚⠑⠍⠏⠇⠕⠒⠀ ⠨⠓⠕⠇⠁⠂⠀⠍⠥⠝⠙⠕⠖⠀⠼⠁⠃⠉
 
 ## Errores comunes y soluciones
 - Si la página no carga: comprobar que la aplicación esté en ejecución y el puerto.

@@ -1,0 +1,129 @@
+@startuml Diagrama de Clases Detallado
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classBackgroundColor #LightYellow
+skinparam classBorderColor #Navy
+
+title Diagrama de Clases Detallado\nSistema de Transcripción Español → Braille
+
+package "ec.epn.edu.proyectoconstruccion" {
+
+    class ProyectoConstruccionApplication <<@SpringBootApplication>> {
+        + {static} main(String[]) : void
+    }
+
+    package "controller" {
+        class TranscriptionController <<@Controller>> {
+            - brailleMapper : BrailleMapper
+            --
+            + TranscriptionController(BrailleMapper)
+            + index() : String
+            + transcribir(texto : String, model : Model) : String
+        }
+    }
+
+    package "service" {
+        class BrailleMapper {
+            - map : Map<String, Integer>
+            - {static} SIGNO_MAYUSCULA : int = 0b101000
+            - {static} SIGNO_NUMERO : int = 0b111100
+            --
+            + BrailleMapper()
+            + transcribir(texto : String) : String
+            + maskToUnicode(mask : int) : String
+            - initLetters() : void
+            - initAccents() : void
+            - initPunctuation() : void
+            - initNumbers() : void
+        }
+
+        note right of BrailleMapper
+          **Responsabilidades:**
+          • Mapeo de caracteres a Braille
+          • Gestión de mayúsculas
+          • Gestión de números
+          • Conversión a Unicode
+
+          **Patrones aplicados:**
+          • Strategy (implícito)
+          • Singleton (por Spring)
+        end note
+    }
+}
+
+package "org.springframework" {
+    class Model <<Interface>> {
+        + addAttribute(String, Object) : Model
+        + addAllAttributes(Map) : Model
+        + containsAttribute(String) : boolean
+    }
+
+    annotation Controller {
+    }
+
+    annotation GetMapping {
+        + value() : String[]
+    }
+
+    annotation PostMapping {
+        + value() : String[]
+    }
+
+    annotation RequestParam {
+        + value() : String
+        + required() : boolean
+    }
+}
+
+package "java.util" {
+    interface Map<K,V> {
+        + put(K, V) : V
+        + get(Object) : V
+        + containsKey(Object) : boolean
+    }
+
+    class HashMap<K,V> {
+        + HashMap()
+        + put(K, V) : V
+        + get(Object) : V
+    }
+}
+
+' Relaciones
+ProyectoConstruccionApplication ..> TranscriptionController : "<<creates>>"
+ProyectoConstruccionApplication ..> BrailleMapper : "<<creates>>"
+
+TranscriptionController --> BrailleMapper : "- brailleMapper"
+TranscriptionController ..> Model : "<<uses>>"
+TranscriptionController ..|> Controller : "<<annotated>>"
+
+BrailleMapper --> Map : "- map"
+Map <|.. HashMap : "<<implements>>"
+
+TranscriptionController::index ..|> GetMapping : "<<annotated>>"
+TranscriptionController::transcribir ..|> PostMapping : "<<annotated>>"
+
+note bottom of TranscriptionController
+  **Endpoints:**
+  • GET  /      → index()
+  • POST /transcribir → transcribir(...)
+
+  **Flujo:**
+  1. Recibe texto del usuario
+  2. Delega a BrailleMapper
+  3. Añade resultado al Model
+  4. Retorna nombre de vista
+end note
+
+note bottom of HashMap
+  **Estructura del mapa:**
+  • "a" → 0b000001
+  • "b" → 0b000011
+  • "ñ" → 0b111101
+  • ...
+  Total: ~60 entradas
+end note
+
+@enduml
+

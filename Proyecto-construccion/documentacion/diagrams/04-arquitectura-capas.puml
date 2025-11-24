@@ -1,0 +1,107 @@
+@startuml Diagrama de Capas con Tecnologías
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+title Arquitectura de Capas del Sistema\nSpanish Braille Application
+
+package "CAPA DE CLIENTE" as client #LightBlue {
+    component "Navegador Web" as browser {
+        [Chrome / Firefox / Edge / Safari]
+        note right
+          • Renderiza HTML5
+          • Aplica CSS3
+          • Ejecuta JavaScript
+          • Envía/Recibe HTTP
+        end note
+    }
+}
+
+package "CAPA DE PRESENTACIÓN" as presentation #LightGreen {
+    component "Thymeleaf 3.x" as thymeleaf <<Template Engine>> {
+        [index.html]
+        [result.html]
+        [styles.css]
+        note right
+          • Sintaxis: th:text, th:utext
+          • Renderizado server-side
+          • Integración con Spring MVC
+        end note
+    }
+}
+
+package "CAPA WEB (MVC)" as web #LightYellow {
+    component "Spring MVC" as springmvc {
+        [DispatcherServlet] <<Front Controller>>
+        [TranscriptionController] <<@Controller>>
+        [ViewResolver]
+        note right
+          • @GetMapping, @PostMapping
+          • Model: datos para vistas
+          • Manejo de peticiones HTTP
+        end note
+    }
+}
+
+package "CAPA DE SERVICIO" as service #LightCoral {
+    component "Lógica de Negocio" as business {
+        [BrailleMapper] <<POJO>>
+        note right
+          • Algoritmos de conversión
+          • Gestión de mapeos
+          • Sin dependencias externas
+          • Lógica pura de dominio
+        end note
+    }
+}
+
+package "CAPA DE INFRAESTRUCTURA" as infrastructure #Wheat {
+    component "Spring Boot 3.x" as springboot {
+        [ProyectoConstruccionApplication]
+        [IoC Container]
+        [Auto-configuration]
+        [Embedded Tomcat 10.x]
+        note right
+          • Java 21
+          • Maven (pom.xml)
+          • Gestión de dependencias
+          • Servidor embebido
+        end note
+    }
+}
+
+' Relaciones entre capas
+browser -down-> thymeleaf : "HTTP/HTTPS"
+thymeleaf -down-> springmvc : "Model & View"
+springmvc -down-> business : "Llamadas de método"
+business -down-> springboot : "Configuración y gestión"
+
+' Notas adicionales
+note right of client
+  **Tecnologías:**
+  HTML5, CSS3, HTTP
+end note
+
+note right of presentation
+  **Tecnologías:**
+  Thymeleaf, HTML, CSS
+end note
+
+note right of web
+  **Tecnologías:**
+  Spring MVC, Servlet API
+end note
+
+note right of service
+  **Tecnologías:**
+  Java 21, POJOs
+end note
+
+note right of infrastructure
+  **Tecnologías:**
+  Spring Boot, Tomcat, Maven
+end note
+
+@enduml
+

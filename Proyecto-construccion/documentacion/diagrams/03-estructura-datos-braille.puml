@@ -1,0 +1,121 @@
+@startuml Mapeo de Caracteres Braille - Estructura de Datos
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classBackgroundColor #LightYellow
+skinparam classBorderColor #Navy
+
+title Estructura de Datos del BrailleMapper\nMapeo de Caracteres Españoles → Braille
+
+object BrailleMapper {
+    + map : HashMap<String, Integer>
+    + SIGNO_MAYUSCULA = 0b101000 (⠠)
+    + SIGNO_NUMERO = 0b111100 (⠼)
+}
+
+object "map : HashMap" as map {
+}
+
+object "Serie 1 (a-j)" as serie1 {
+    "a" → 0b000001 (⠁)
+    "b" → 0b000011 (⠃)
+    "c" → 0b001001 (⠉)
+    "d" → 0b011001 (⠙)
+    "e" → 0b010001 (⠑)
+    "f" → 0b001011 (⠋)
+    "g" → 0b011011 (⠛)
+    "h" → 0b010011 (⠓)
+    "i" → 0b001010 (⠊)
+    "j" → 0b011010 (⠚)
+}
+
+object "Serie 2 (k-t)" as serie2 {
+    "k" → 0b000101 (⠅)
+    "l" → 0b000111 (⠇)
+    "m" → 0b001101 (⠍)
+    "n" → 0b011101 (⠝)
+    "o" → 0b010101 (⠕)
+    "p" → 0b001111 (⠏)
+    "q" → 0b011111 (⠟)
+    "r" → 0b010111 (⠗)
+    "s" → 0b001110 (⠎)
+    "t" → 0b011110 (⠞)
+    ---
+    Serie 1 + punto 3
+}
+
+object "Serie 3 (u-z)" as serie3 {
+    "u" → 0b100101 (⠥)
+    "v" → 0b100111 (⠧)
+    "w" → 0b111010 (⠺)
+    "x" → 0b101101 (⠭)
+    "y" → 0b111101 (⠽)
+    "z" → 0b110101 (⠵)
+    ---
+    Serie 1/2 + punto 6
+}
+
+object "Vocales Acentuadas" as acentos {
+    "á" → 0b101000 (⠨)
+    "é" → 0b101000 (⠨)
+    "í" → 0b001010 (⠊)
+    "ó" → 0b010101 (⠕)
+    "ú" → 0b100101 (⠥)
+}
+
+object "Caracteres Especiales" as especiales {
+    "ñ" → 0b111101 (⠻)
+    "ü" → 0b100101 (⠥)
+}
+
+object "Puntuación" as puntuacion {
+    "," → 0b000010 (⠂)
+    "." → 0b110010 (⠲)
+    ";" → 0b000110 (⠆)
+    ":" → 0b010010 (⠒)
+    "?" → 0b100011 (⠢)
+    "!" → 0b011011 (⠖)
+    "(" → 0b100011 (⠣)
+    ")" → 0b011100 (⠜)
+}
+
+object "Números (0-9)" as numeros {
+    "1" → map.get("a") = ⠁
+    "2" → map.get("b") = ⠃
+    "3" → map.get("c") = ⠉
+    "4" → map.get("d") = ⠙
+    "5" → map.get("e") = ⠑
+    "6" → map.get("f") = ⠋
+    "7" → map.get("g") = ⠛
+    "8" → map.get("h") = ⠓
+    "9" → map.get("i") = ⠊
+    "0" → map.get("j") = ⠚
+    ---
+    Precedidos por SIGNO_NUMERO
+}
+
+object "Conversión Unicode" as unicode {
+    mask → char(0x2800 + mask)
+    → Unicode Braille Pattern
+}
+
+BrailleMapper *-- map
+map *-- serie1
+map *-- serie2
+map *-- serie3
+map *-- acentos
+map *-- especiales
+map *-- puntuacion
+map *-- numeros
+
+BrailleMapper --> unicode : "Utiliza"
+
+note bottom of unicode
+  **Fórmula de conversión:**
+  int mask = 0b010101
+  char braille = (char)(0x2800 + mask)
+  → resultado: ⠕
+end note
+
+@enduml
+

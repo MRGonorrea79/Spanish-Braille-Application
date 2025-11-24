@@ -1,0 +1,84 @@
+@startuml Diagrama de Componentes y Dependencias
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam roundcorner 10
+
+title Diagrama de Componentes y Dependencias\nArquitectura del Sistema
+
+package "Spring Boot Application" <<Application>> {
+    component "ProyectoConstruccionApplication" as app <<@SpringBootApplication>> #LightBlue
+}
+
+note right of app
+  Clase principal
+  con @SpringBootApplication
+end note
+
+package "Spring IoC Container" <<Framework>> #LightYellow {
+    component "Bean Factory" as ioc
+
+    note right of ioc
+      Inversión de Control
+      y Dependency Injection
+    end note
+
+    package "Controllers Layer" {
+        component "TranscriptionController" as controller <<@Controller>> #LightGreen
+    }
+
+    package "Service Layer" {
+        component "BrailleMapper" as mapper <<Service>> #LightCoral
+    }
+}
+
+package "Output" {
+    component "Unicode Braille Strings" as output <<Result>> #Wheat
+}
+
+note right of output
+  Rango Unicode:
+  U+2800 - U+28FF
+end note
+
+' Relaciones
+app -down-> ioc : "Inicializa y gestiona"
+ioc -down-> controller : "Gestiona"
+ioc -down-> mapper : "Gestiona"
+
+controller -right-> mapper : "<<uses>>"
+mapper -down-> output : "Genera"
+
+' Detalles del Controller
+note bottom of controller
+  **TranscriptionController**
+  + index() : String
+  + transcribir(...) : String
+  --
+  - brailleMapper : BrailleMapper
+end note
+
+' Detalles del Mapper
+note bottom of mapper
+  **BrailleMapper**
+  + transcribir(String) : String
+  + maskToUnicode(int) : String
+  --
+  - map : Map<String, Integer>
+  - SIGNO_NUMERO : int
+  - SIGNO_MAYUSCULA : int
+  --
+  - initLetters() : void
+  - initAccents() : void
+  - initPunctuation() : void
+  - initNumbers() : void
+  **
+  **Responsabilidades:**
+  • Mapeo de caracteres españoles a Braille
+  • Gestión de mayúsculas y números
+  • Conversión a Unicode Braille
+end note
+
+@enduml
+

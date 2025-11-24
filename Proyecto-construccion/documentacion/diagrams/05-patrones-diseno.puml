@@ -1,0 +1,125 @@
+@startuml Patrones de Diseño Implementados
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classBackgroundColor #LightYellow
+
+title Patrones de Diseño Implementados\nSistema de Transcripción Braille
+
+package "Patrón MVC (Model-View-Controller)" <<Pattern>> {
+    class "Model" as model <<Data>> {
+        + textoOriginal : String
+        + resultadoBraille : String
+    }
+
+    class "View" as view <<Template>> {
+        + index.html
+        + result.html
+    }
+
+    class "Controller" as controller <<@Controller>> {
+        + index() : String
+        + transcribir() : String
+    }
+
+    controller --> model : "Manipula"
+    controller --> view : "Selecciona"
+    view ..> model : "Renderiza datos"
+}
+
+package "Patrón Dependency Injection" <<Pattern>> {
+    class "Spring IoC Container" as ioc <<Framework>> {
+        + getBean(Class<T>) : T
+        + autowire(Object)
+    }
+
+    class "TranscriptionController" as controller2 <<@Controller>> {
+        - brailleMapper : BrailleMapper {Inyectado}
+    }
+
+    class "BrailleMapper" as mapper <<@Component>> {
+        + transcribir() : String
+    }
+
+    ioc ..> controller2 : "<<creates>>"
+    ioc ..> mapper : "<<creates>>"
+    controller2 o--> mapper : "Inyectado por constructor"
+}
+
+package "Patrón Front Controller" <<Pattern>> {
+    class "DispatcherServlet" as dispatcher <<Front Controller>> {
+        + doDispatch(HttpServletRequest)
+        + getHandler(HttpServletRequest)
+        + processDispatchResult()
+    }
+
+    class "Handler Mapping" as mapping {
+        + getHandler() : HandlerExecutionChain
+    }
+
+    class "View Resolver" as resolver {
+        + resolveViewName() : View
+    }
+
+    dispatcher --> mapping : "Usa"
+    dispatcher --> resolver : "Usa"
+    dispatcher --> controller : "Delega"
+
+    note right of dispatcher
+      Punto único de entrada
+      para todas las peticiones HTTP
+    end note
+}
+
+package "Patrón Strategy (implícito)" <<Pattern>> {
+    interface "TranscriptionStrategy" as strategy <<Interface>> {
+        + transcribir(String) : String
+    }
+
+    class "BrailleMapper" as mapper2 <<ConcreteStrategy>> {
+        + transcribir(String) : String
+    }
+
+    class "Future: InverseBrailleMapper" as inverse <<ConcreteStrategy>> {
+        + transcribir(String) : String
+    }
+
+    strategy <|.. mapper2 : "Implementa"
+    strategy <|.. inverse : "Implementaría"
+
+    note bottom of strategy
+      Algoritmo de conversión
+      encapsulado y fácilmente
+      intercambiable
+    end note
+}
+
+package "Patrón Template Method" <<Pattern>> {
+    class "Thymeleaf" as thymeleaf <<Template Engine>> {
+        + process(String, Context) : String
+        # resolveTemplate()
+        # applyModel()
+        # renderOutput()
+    }
+
+    class "index.html" as template1 <<Template>> {
+        + estructura HTML
+        + th:text, th:utext
+    }
+
+    class "result.html" as template2 <<Template>> {
+        + estructura HTML
+        + th:text, th:utext
+    }
+
+    thymeleaf --> template1 : "Procesa"
+    thymeleaf --> template2 : "Procesa"
+
+    note bottom of thymeleaf
+      Define estructura base
+      Separa estructura de datos
+    end note
+}
+
+@enduml
+

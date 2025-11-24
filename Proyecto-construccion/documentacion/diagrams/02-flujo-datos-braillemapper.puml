@@ -1,0 +1,96 @@
+@startuml Flujo de Datos en BrailleMapper
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam activityBackgroundColor #LightBlue
+skinparam activityBorderColor #Navy
+skinparam shadowing false
+
+title Flujo de Datos en BrailleMapper\nProcesamiento de "Hola 123"
+
+start
+
+:Input: "Hola 123";
+note right
+  Texto de entrada
+  del usuario
+end note
+
+:1. Normalizar espacios
+replaceAll("\\s+", " ");
+
+:Texto normalizado:
+"Hola 123";
+
+:2. Iterar por cada carácter;
+
+partition "Procesamiento Carácter por Carácter" {
+
+    fork
+        :Carácter 'H';
+        note right
+          Mayúscula detectada
+        end note
+        :Detectar mayúscula;
+        :Añadir SIGNO_MAYUSCULA (⠠);
+        :Convertir 'h' → ⠓;
+
+    fork again
+        :Carácter 'o';
+        :map.get("o") → ⠕;
+
+    fork again
+        :Carácter 'l';
+        :map.get("l") → ⠇;
+
+    fork again
+        :Carácter 'a';
+        :map.get("a") → ⠁;
+
+    fork again
+        :Carácter ' ' (espacio);
+        :map.get(" ") → ⠀;
+        note right
+          Espacio Braille
+        end note
+
+    fork again
+        :Carácter '1';
+        note right
+          Primer dígito
+        end note
+        :Detectar dígito;
+        if (inNumber == false?) then (sí)
+            :Añadir SIGNO_NUMERO (⠼);
+            :inNumber = true;
+        endif
+        :map.get("1") → ⠁;
+
+    fork again
+        :Carácter '2';
+        note right
+          Número continuo
+        end note
+        :map.get("2") → ⠃;
+
+    fork again
+        :Carácter '3';
+        note right
+          Número continuo
+        end note
+        :map.get("3") → ⠉;
+
+    end fork
+}
+
+:3. Concatenar todo en StringBuilder;
+
+:Output: "⠠⠓⠕⠇⠁ ⠼⠁⠃⠉";
+note right
+  Resultado final
+  en Braille Unicode
+end note
+
+stop
+
+@enduml
+

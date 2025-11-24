@@ -20,7 +20,9 @@ Este documento describe la arquitectura general de la aplicación "Spanish Brail
 4. El resultado se envía a la plantilla `result.html` para mostrar al usuario.
 
 ## Diagrama
-Guarda un diagrama en `documentacion/images/diagrama-arquitectura.png` y añádelo aquí cuando esté listo.
+![Diagrama arquitectónico de alto nivel](images/DiagramaArquitectonico.png)
+
+Figura: Diagrama arquitectónico de la aplicación (archivo: documentacion/images/DiagramaArquitectonico.png)
 
 ## Tecnologías usadas
 - Java 21
@@ -29,4 +31,4 @@ Guarda un diagrama en `documentacion/images/diagrama-arquitectura.png` y añáde
 - Maven
 
 ---
-*Autor: [tu nombre]*
+

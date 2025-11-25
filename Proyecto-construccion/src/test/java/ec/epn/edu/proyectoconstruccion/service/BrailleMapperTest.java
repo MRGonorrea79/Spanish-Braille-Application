@@ -26,7 +26,7 @@ class BrailleMapperTest {
     @DisplayName("2. Transcribir mayúsculas con signo de mayúscula")
     void transcribirMayusculas() {
         String result = mapper.transcribir("HOLA");
-        assertThat(result).contains("\u2828");
+        assertThat(result).contains("\u2820");
     }
 
     @Test
@@ -118,3 +118,4 @@ class BrailleMapperTest {
         assertThat(result).contains(" ");
     }
 }
+

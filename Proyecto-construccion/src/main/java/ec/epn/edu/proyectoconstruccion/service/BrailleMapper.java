@@ -28,7 +28,7 @@ public class BrailleMapper {
     private final Map<String, Integer> map = new HashMap<>();
 
     private final int SIGNO_NUMERO = mask(3,4,5,6);  // ⠼
-    private final int SIGNO_MAYUSCULA = mask(4,6);   // ⠠
+    private final int SIGNO_MAYUSCULA = mask(6);     // ⠠
 
     /**
      * Constructor: inicializa todas las tablas Braille.
@@ -109,7 +109,9 @@ public class BrailleMapper {
         map.put(":", mask(2,5));
         map.put(".", mask(2,5,6));
         map.put("?", mask(2,3,6));
+        map.put("¿", mask(2,3,6));
         map.put("!", mask(2,3,5));
+        map.put("¡", mask(2,3,5));
         map.put("-", mask(3,6));
         map.put("(", mask(5,6));
         map.put(")", mask(5,6));
@@ -176,6 +178,10 @@ public class BrailleMapper {
     public String maskToUnicode(int mask) {
         return String.valueOf((char) (0x2800 + mask));
     }
+    
+    private boolean isFullUppercaseWord(String word) {
+        return word.length() > 1 && word.equals(word.toUpperCase());
+    }
 
     /**
      * Transcribe un texto español a Braille Unicode.
@@ -195,30 +201,54 @@ public class BrailleMapper {
         texto = texto.replaceAll("\\s+", " ");
 
         StringBuilder sb = new StringBuilder();
-        boolean inNumber = false;
 
-        for (char c : texto.toCharArray()) {
-            String ch = String.valueOf(c);
+        String[] palabras = texto.split(" ");
 
-            if (Character.isUpperCase(c)) {
+        for (int i = 0; i < palabras.length; i++) {
+            String palabra = palabras[i];
+
+            boolean esMayusCompleta = isFullUppercaseWord(palabra);
+
+            if (esMayusCompleta) {
+                // Doble signo de mayúscula ⠠⠠
                 sb.append(maskToUnicode(SIGNO_MAYUSCULA));
-                ch = ch.toLowerCase();
+                sb.append(maskToUnicode(SIGNO_MAYUSCULA));
             }
-            if (ch.matches("\\d")) {
-                if (!inNumber) {
-                    sb.append(maskToUnicode(SIGNO_NUMERO));
-                    inNumber = true;
+
+            boolean inNumber = false;
+
+            for (char c : palabra.toCharArray()) {
+                String ch = String.valueOf(c);
+
+                if (!esMayusCompleta && Character.isUpperCase(c)) {
+                    sb.append(maskToUnicode(SIGNO_MAYUSCULA));
+                    ch = ch.toLowerCase();
                 }
-                sb.append(maskToUnicode(map.get(ch)));
-                continue;
+
+                if (ch.matches("\\d")) {
+                    if (!inNumber) {
+                        sb.append(maskToUnicode(SIGNO_NUMERO));
+                        inNumber = true;
+                    }
+                    sb.append(maskToUnicode(map.get(ch)));
+                    continue;
+                }
+
+                inNumber = false;
+
+                if (map.containsKey(ch.toLowerCase())) {
+                    sb.append(maskToUnicode(map.get(ch.toLowerCase())));
+                } else {
+                    sb.append(" ");
+                }
             }
-            inNumber = false;
-            if (map.containsKey(ch)) {
-                sb.append(maskToUnicode(map.get(ch)));
-            } else {
-                sb.append(" ");
+
+            if (i < palabras.length - 1) {
+                sb.append(maskToUnicode(0)); // espacio en braille
             }
         }
+
         return sb.toString();
     }
 }
+

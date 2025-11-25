@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: ec.epn.edu.proyectoconstruccion.service.BrailleMapperTest
 -------------------------------------------------------------------------------
-Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.106 s -- in ec.epn.edu.proyectoconstruccion.service.BrailleMapperTest
+Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.138 s -- in ec.epn.edu.proyectoconstruccion.service.BrailleMapperTest

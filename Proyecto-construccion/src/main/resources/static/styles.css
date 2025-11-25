@@ -1,16 +1,11 @@
-/* styles.css
-   Diseño limpio, accesible y preparado para impresión / señalética.
-*/
 
-/* ---- Reset ligero ---- */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
 
-/* ---- Tipografía y paleta ---- */
 :root{
     --bg: #f7f8fb;
     --card: #ffffff;
-    --accent: #0b5fff;      /* azul accesible */
+    --accent: #0b5fff;
     --muted: #556070;
     --success: #0b7a4a;
     --danger: #c23939;
@@ -179,5 +174,6 @@ small, .muted { color: var(--muted); font-size: .9rem; }
     margin-top: 8px;
     font-weight: 600;
 }
+
 .alert--success { background: #e8f7ee; color: var(--success); border: 1px solid rgba(11,122,74,0.12); }
 .alert--error   { background: #fff0f0; color: var(--danger); border: 1px solid rgba(194,57,57,0.08); }

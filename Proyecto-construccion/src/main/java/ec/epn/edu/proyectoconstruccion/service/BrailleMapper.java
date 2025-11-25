@@ -28,7 +28,7 @@ public class BrailleMapper {
     private final Map<String, Integer> map = new HashMap<>();
 
     private final int SIGNO_NUMERO = mask(3,4,5,6);  // ⠼
-    private final int SIGNO_MAYUSCULA = mask(6);     // ⠠
+    private final int SIGNO_MAYUSCULA = mask(4,6);     // ⠠
 
     /**
      * Constructor: inicializa todas las tablas Braille.
@@ -75,8 +75,8 @@ public class BrailleMapper {
         map.put("y", addDot(map.get("n"), 6));
         map.put("z", addDot(map.get("o"), 6));
 
-        map.put("ñ", mask(1,3,4,5,6)); // ⠻
-        map.put("ü", mask(1,3,6));     // ⠳
+        map.put("ñ", mask(1,2,4,5,6)); // ⠻
+        map.put("ü", mask(1,2,5,6));     // ⠳
     }
 
     // ===========================
@@ -84,16 +84,14 @@ public class BrailleMapper {
     // ===========================
 
     /**
-     * Carga vocales acentuadas con el prefijo oficial (4,6).
+     * Carga vocales acentuadas.
      */
     private void initAccents() {
-        int prefijo = mask(4,6);
-
-        map.put("á", prefijo);
-        map.put("é", prefijo);
-        map.put("í", prefijo);
-        map.put("ó", prefijo);
-        map.put("ú", prefijo);
+        map.put("á", mask(1,2,3,5,6));
+        map.put("é", mask(2,3,4,6));
+        map.put("í", mask(3,4));
+        map.put("ó", mask(3,4,6));
+        map.put("ú", mask(2,3,4,5,6));
     }
 
     // ===========================
@@ -107,20 +105,20 @@ public class BrailleMapper {
         map.put(",", mask(2));
         map.put(";", mask(2,3));
         map.put(":", mask(2,5));
-        map.put(".", mask(2,5,6));
-        map.put("?", mask(2,3,6));
-        map.put("¿", mask(2,3,6));
+        map.put(".", mask(3));
+        map.put("?", mask(2,6));
+        map.put("¿", mask(2,6));
         map.put("!", mask(2,3,5));
         map.put("¡", mask(2,3,5));
         map.put("-", mask(3,6));
-        map.put("(", mask(5,6));
-        map.put(")", mask(5,6));
+        map.put("(", mask(1,2,6));
+        map.put(")", mask(3,4,5));
+        map.put("+", mask(2,3,5));
+        map.put("*", mask(2,3,5,6));
+        map.put("=", mask(2,3,5,6));
+        map.put("/", mask(2,5,6));
         map.put(" ", 0);
     }
-
-    // ===========================
-    //   NÚMEROS
-    // ===========================
 
     /**
      * Carga números siguiendo: signo número + serie a–j.
@@ -213,7 +211,8 @@ public class BrailleMapper {
 
             String palabra = palabras[i];
 
-            boolean esNumero = palabra.matches("\\d+");
+            boolean esNumeroExtendido = palabra.matches("(?=.*\\d)[^A-Za-z]+");
+            boolean esNumero = esNumeroExtendido;
             boolean esMayusCompleta = !esNumero && isFullUppercaseWord(palabra);
 
             if (esMayusCompleta) {
@@ -226,17 +225,31 @@ public class BrailleMapper {
             for (char c : palabra.toCharArray()) {
                 String ch = String.valueOf(c);
 
-                if (!esNumero && !esMayusCompleta && Character.isUpperCase(c)) {
+                if (esNumero) {
+
+                    if (Character.isDigit(c)) {
+                        if (!inNumber) {
+                            sb.append(maskToUnicode(SIGNO_NUMERO));
+                            inNumber = true;
+                        }
+                        sb.append(maskToUnicode(map.get(ch)));
+                        continue;
+                    }
+
+                    if (map.containsKey(ch)) {
+                        sb.append(maskToUnicode(map.get(ch)));
+                        inNumber = false;
+                        continue;
+                    }
+
+                    sb.append(" ");
+                    inNumber = false;
+                    continue;
+                }
+
+                if (!esMayusCompleta && Character.isUpperCase(c)) {
                     sb.append(maskToUnicode(SIGNO_MAYUSCULA));
                     ch = ch.toLowerCase();
-                }
-                if (ch.matches("\\d")) {
-                    if (!inNumber) {
-                        sb.append(maskToUnicode(SIGNO_NUMERO));
-                        inNumber = true;
-                    }
-                    sb.append(maskToUnicode(map.get(ch)));
-                    continue;
                 }
 
                 inNumber = false;
@@ -247,6 +260,7 @@ public class BrailleMapper {
                     sb.append(" ");
                 }
             }
+
             if (i < palabras.length - 1) {
                 sb.append(maskToUnicode(0));
             }
@@ -254,4 +268,5 @@ public class BrailleMapper {
 
         return sb.toString();
     }
+
 }

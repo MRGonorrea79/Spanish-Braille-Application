@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: ec.epn.edu.proyectoconstruccion.ProyectoConstruccionApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.952 s -- in ec.epn.edu.proyectoconstruccion.ProyectoConstruccionApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.236 s -- in ec.epn.edu.proyectoconstruccion.ProyectoConstruccionApplicationTests

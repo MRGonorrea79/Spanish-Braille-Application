@@ -26,7 +26,7 @@ class BrailleMapperTest {
     @DisplayName("2. Transcribir mayúsculas con signo de mayúscula")
     void transcribirMayusculas() {
         String result = mapper.transcribir("HOLA");
-        assertThat(result).contains("\u2820");
+        assertThat(result).contains("\u2828");
     }
 
     @Test
@@ -68,16 +68,13 @@ class BrailleMapperTest {
     @DisplayName("8. Caracteres NO españoles deben generar espacio en Braille")
     void caracteresInvalidosDevuelvenEspacio() {
         String result = mapper.transcribir("hola @ mundo");
-        // '@' no existe → genera un espacio Braille
         assertThat(result).contains(" ");
     }
 
     @Test
     @DisplayName("9. No debe aceptar emojis: reemplazar por espacio")
     void emojiDebeReemplazarse() {
-        String result = mapper.transcribir("hola 😀");
-
-        // esperado → el output contiene un espacio Braille por el emoji
+        String result = mapper.transcribir("hola cara de bola 😀");
         assertThat(result).contains(" ");
     }
 
@@ -114,8 +111,7 @@ class BrailleMapperTest {
     @Test
     @DisplayName("14. Caracteres latinos NO españoles (ê â ô) → reemplazo")
     void latinExtNoSoportado() {
-        String result = mapper.transcribir("café ângulo");
+        String result = mapper.transcribir("Galletas ângulo");
         assertThat(result).contains(" ");
     }
 }
-

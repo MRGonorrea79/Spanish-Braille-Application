@@ -3,19 +3,62 @@
 <head>
     <meta charset="UTF-8" />
     <title>Resultado — Braille</title>
-    <link rel="stylesheet" href="/styles.css" />
-</head>
+    <link rel="stylesheet" th:href="@{/styles.css}" />
+    <style>
+        .braille-wrapper {
+            display: flex;
+            justify-content: center;
+            margin: 24px 0;
+        }
 
+        .braille-container {
+            font-family: var(--braille-font);
+            background: #f6f8ff;
+            border: 2px solid #cdd9ff;
+            padding: 28px;
+            border-radius: 14px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-size: 3rem;          /* tamaño grande para pantalla */
+            letter-spacing: 0.15em;   /* separación mayor para Braille */
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        @media print {
+            .braille-container {
+                font-size: 48pt;
+                letter-spacing: 0.18em;
+                border: none;
+                padding: 20mm;
+                max-width: 100%;
+            }
+
+            .braille-wrapper {
+                margin: 0;
+                display: block;
+            }
+
+            button,
+            a,
+            label[for="text"],
+            input[type="checkbox"] {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
 <body>
 <main>
     <h1>Transcripción</h1>
-
-    <p>Texto original: <strong th:text="${textoOriginal}"></strong></p>
-
-
-    <div class="braille-container" th:utext="${resultadoBraille}">
+    <p>
+        Texto original:
+        <strong th:text="${textoOriginal}"></strong>
+    </p>
+    <div class="braille-wrapper">
+        <div class="braille-container" th:utext="${resultadoBraille}"></div>
     </div>
-
     <p class="acciones">
         <a href="/">Nueva transcripción</a> —
         <button onclick="window.print()">Imprimir</button>
@@ -23,3 +66,5 @@
 </main>
 </body>
 </html>
+
+

@@ -178,7 +178,10 @@ public class BrailleMapper {
     public String maskToUnicode(int mask) {
         return String.valueOf((char) (0x2800 + mask));
     }
-    
+
+    // ================================================================
+    //  NUEVO: DETECCIÓN DE PALABRAS COMPLETAS EN MAYÚSCULAS (SIGLAS)
+    // ================================================================
     private boolean isFullUppercaseWord(String word) {
         return word.length() > 1 && word.equals(word.toUpperCase());
     }
@@ -197,20 +200,23 @@ public class BrailleMapper {
      * @return cadena en Braille Unicode
      */
     public String transcribir(String texto) {
+        if (texto.trim().isEmpty()) {
+            return maskToUnicode(0);
+        }
 
         texto = texto.replaceAll("\\s+", " ");
 
         StringBuilder sb = new StringBuilder();
-
         String[] palabras = texto.split(" ");
 
         for (int i = 0; i < palabras.length; i++) {
+
             String palabra = palabras[i];
 
-            boolean esMayusCompleta = isFullUppercaseWord(palabra);
+            boolean esNumero = palabra.matches("\\d+");
+            boolean esMayusCompleta = !esNumero && isFullUppercaseWord(palabra);
 
             if (esMayusCompleta) {
-                // Doble signo de mayúscula ⠠⠠
                 sb.append(maskToUnicode(SIGNO_MAYUSCULA));
                 sb.append(maskToUnicode(SIGNO_MAYUSCULA));
             }
@@ -220,11 +226,10 @@ public class BrailleMapper {
             for (char c : palabra.toCharArray()) {
                 String ch = String.valueOf(c);
 
-                if (!esMayusCompleta && Character.isUpperCase(c)) {
+                if (!esNumero && !esMayusCompleta && Character.isUpperCase(c)) {
                     sb.append(maskToUnicode(SIGNO_MAYUSCULA));
                     ch = ch.toLowerCase();
                 }
-
                 if (ch.matches("\\d")) {
                     if (!inNumber) {
                         sb.append(maskToUnicode(SIGNO_NUMERO));
@@ -242,13 +247,11 @@ public class BrailleMapper {
                     sb.append(" ");
                 }
             }
-
             if (i < palabras.length - 1) {
-                sb.append(maskToUnicode(0)); // espacio en braille
+                sb.append(maskToUnicode(0));
             }
         }
 
         return sb.toString();
     }
 }
-

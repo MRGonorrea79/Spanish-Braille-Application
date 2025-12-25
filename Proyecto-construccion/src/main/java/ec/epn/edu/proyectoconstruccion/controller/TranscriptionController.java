@@ -1,6 +1,7 @@
 package ec.epn.edu.proyectoconstruccion.controller;
 
 import ec.epn.edu.proyectoconstruccion.service.BrailleMapper;
+import ec.epn.edu.proyectoconstruccion.service.EspañolMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class TranscriptionController {
 
     /** Servicio encargado de mapear texto plano a Braille Unicode. */
     private final BrailleMapper brailleMapper = new BrailleMapper();
-
+    private final EspañolMapper españolMapper = new EspañolMapper();
     /**
      * Muestra la página principal del transcriptor.
      *
@@ -55,15 +56,29 @@ public class TranscriptionController {
      * @param model objeto utilizado para enviar atributos a la vista Thymeleaf
      * @return nombre de la plantilla Thymeleaf donde se muestra el resultado
      */
-    @PostMapping("/transcribir")
-    public String transcribir(@RequestParam("texto") String texto, Model model) {
+    @PostMapping("/transcribir-Español")
+    public String transcribirEspañol(@RequestParam("texto") String texto, Model model) {
 
         String braille = brailleMapper.transcribir(texto);
 
         model.addAttribute("textoOriginal", texto);
         model.addAttribute("resultadoBraille", braille);
 
-        return "result";
+        return "result-español";
+    }
+    @PostMapping("/transcribir-Braille")
+    public String transcribirBraille(@RequestParam("texto") String texto, Model model) {
+
+        model.addAttribute("textoOriginal", texto);
+        model.addAttribute("resultadoEspañol", españolMapper.brailleAEspanol(texto));
+
+        return "result-braille";
+    }
+    @PostMapping("/espejo")
+    public String transcribirEspejo(@RequestParam("texto") String texto, Model model) {
+
+
+        return "result-espejo";
     }
 }
 

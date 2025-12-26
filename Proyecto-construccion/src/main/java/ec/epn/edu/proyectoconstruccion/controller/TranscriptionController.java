@@ -1,7 +1,6 @@
 package ec.epn.edu.proyectoconstruccion.controller;
 
 import ec.epn.edu.proyectoconstruccion.service.BrailleMapper;
-import ec.epn.edu.proyectoconstruccion.service.EspañolMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +30,6 @@ public class TranscriptionController {
 
     /** Servicio encargado de mapear texto plano a Braille Unicode. */
     private final BrailleMapper brailleMapper = new BrailleMapper();
-    private final EspañolMapper españolMapper = new EspañolMapper();
     /**
      * Muestra la página principal del transcriptor.
      *
@@ -49,7 +47,7 @@ public class TranscriptionController {
      * Procesa el texto ingresado por el usuario y lo convierte en Braille Unicode.
      *
      * <p>El texto recibido desde el formulario se envía al servicio
-     * {@link BrailleMapper#transcribir(String)}, y el resultado se envía al modelo
+     * {@link BrailleMapper#españolABraille(String)}, y el resultado se envía al modelo
      * para ser presentado en la vista correspondiente.</p>
      *
      * @param texto texto plano ingresado por el usuario
@@ -59,10 +57,8 @@ public class TranscriptionController {
     @PostMapping("/transcribir-Español")
     public String transcribirEspañol(@RequestParam("texto") String texto, Model model) {
 
-        String braille = brailleMapper.transcribir(texto);
-
         model.addAttribute("textoOriginal", texto);
-        model.addAttribute("resultadoBraille", braille);
+        model.addAttribute("resultadoBraille",brailleMapper.españolABraille(texto));
 
         return "result-español";
     }
@@ -70,14 +66,14 @@ public class TranscriptionController {
     public String transcribirBraille(@RequestParam("texto") String texto, Model model) {
 
         model.addAttribute("textoOriginal", texto);
-        model.addAttribute("resultadoEspañol", españolMapper.brailleAEspanol(texto));
+        model.addAttribute("resultadoEspañol", brailleMapper.brailleAEspañol(texto));
 
         return "result-braille";
     }
     @PostMapping("/espejo")
     public String transcribirEspejo(@RequestParam("texto") String texto, Model model) {
 
-
+        model.addAttribute("resultadoBraille", brailleMapper.españolABrailleEspejo(texto));
         return "result-espejo";
     }
 }

@@ -9,10 +9,16 @@
 <main>
     <h1>Transcriptor Español → Braille</h1>
 
-    <form action="/transcribir" method="post">
+    <form action="/transcribir-Español" method="post">
         <label for="text">Texto (incluye números, acentos, signos):</label><br/>
-        <textarea id="text" name="texto" rows="6" cols="60">Ejemplo: ¡Hola, mundo! 123</textarea><br/>
+        <textarea id="text" name="texto" rows="6" cols="60"></textarea><br/>
 
+        <button type="submit">Transcribir</button>
+    </form>
+    <br></br>
+    <form action="/transcribir-Braille" method="post">
+        <label for="text">Texto en Braille(Unicode):</label><br/>
+        <textarea id="text" name="texto" rows="6" cols="60"></textarea><br/>
         <button type="submit">Transcribir</button>
     </form>
 

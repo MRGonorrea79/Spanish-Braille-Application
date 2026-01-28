@@ -1,0 +1,154 @@
+@startuml Diagrama de Clases Segunda Iteración
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classBackgroundColor #LightYellow
+skinparam classBorderColor #Navy
+
+title Diagrama de Clases - Segunda Iteración\nSistema de Transcripción Español ↔ Braille
+
+package "ec.epn.edu.proyectoconstruccion" {
+
+    class ProyectoConstruccionApplication <<@SpringBootApplication>> {
+        + {static} main(String[]) : void
+    }
+
+    package "controller" {
+        class TranscriptionController <<@Controller>> {
+            - brailleMapper : BrailleMapper
+            - inverseBrailleMapper : InverseBrailleMapper <<NUEVO>>
+            --
+            + TranscriptionController(BrailleMapper, InverseBrailleMapper)
+            + index() : String
+            + transcribir(texto : String, model : Model) : String
+            + indexInverso() : String <<NUEVO>>
+            + transcribirInverso(textoBraille : String, model : Model) : String <<NUEVO>>
+            + indexEspejo() : String <<NUEVO>>
+            + transcribirEspejo(texto : String, model : Model) : String <<NUEVO>>
+        }
+        
+        note right of TranscriptionController
+          **Nuevos endpoints:**
+          • GET  /inverso
+          • POST /transcribir-inverso
+          • GET  /espejo
+          • POST /transcribir-espejo
+        end note
+    }
+
+    package "service" {
+        class BrailleMapper <<MODIFICADO>> {
+            - map : Map<String, Integer>
+            - {static} SIGNO_MAYUSCULA : int = 0b101000
+            - {static} SIGNO_NUMERO : int = 0b111100
+            --
+            + BrailleMapper()
+            + transcribir(texto : String) : String
+            + maskToUnicode(mask : int) : String
+            + transcribirEnEspejo(texto : String) : String <<NUEVO>>
+            - convertirAEspejo(brailleText : String) : String <<NUEVO>>
+            - reflejarMascaraHorizontal(mask : int) : int <<NUEVO>>
+            - initLetters() : void
+            - initAccents() : void
+            - initPunctuation() : void
+            - initNumbers() : void
+        }
+
+        class InverseBrailleMapper <<NUEVO>> {
+            - reverseMap : Map<Integer, String>
+            - {static} SIGNO_MAYUSCULA : int = 0b101000
+            - {static} SIGNO_NUMERO : int = 0b111100
+            --
+            + InverseBrailleMapper()
+            + transcribirAEspanol(brailleText : String) : String
+            - initReverseMap() : void
+            - unicodeToMask(brailleChar : char) : int
+        }
+
+        note right of BrailleMapper
+          **Nuevas funcionalidades:**
+          • transcribirEnEspejo()
+            - Invierte orden (RTL)
+            - Refleja cada carácter
+          • reflejarMascaraHorizontal()
+            - Intercambia puntos 1↔4, 2↔5, 3↔6
+        end note
+        
+        note right of InverseBrailleMapper
+          **Funcionalidad principal:**
+          Transcripción Braille → Español
+          
+          **Características:**
+          • Mapeo inverso
+          • Detección de signos especiales
+          • Manejo de estado (mayúsculas, números)
+          • Soporte para acentos
+        end note
+    }
+}
+
+package "org.springframework" {
+    class Model <<Interface>> {
+        + addAttribute(String, Object) : Model
+    }
+
+    annotation Controller
+    annotation GetMapping
+    annotation PostMapping
+    annotation RequestParam
+}
+
+package "java.util" {
+    interface "Map<K,V>" as Map {
+        + put(K, V) : V
+        + get(Object) : V
+    }
+
+    class "HashMap<K,V>" as HashMap {
+        + HashMap()
+        + put(K, V) : V
+        + get(Object) : V
+    }
+}
+
+' Relaciones existentes
+ProyectoConstruccionApplication ..> TranscriptionController : "<<creates>>"
+ProyectoConstruccionApplication ..> BrailleMapper : "<<creates>>"
+TranscriptionController --> BrailleMapper : "- brailleMapper"
+TranscriptionController ..> Model : "<<uses>>"
+TranscriptionController ..|> Controller : "<<annotated>>"
+BrailleMapper --> Map : "- map"
+Map <|.. HashMap : "<<implements>>"
+
+' Relaciones NUEVAS (en rojo)
+ProyectoConstruccionApplication ..> InverseBrailleMapper : "<<creates>>" #red
+TranscriptionController --> InverseBrailleMapper : "- inverseBrailleMapper" #red
+InverseBrailleMapper --> Map : "- reverseMap" #red
+
+note bottom of TranscriptionController
+  **Flujo de datos:**
+  
+  **Español → Braille:**
+  1. Usuario ingresa texto español
+  2. Controller → BrailleMapper.transcribir()
+  3. Retorna Braille Unicode
+  
+  **Braille → Español (NUEVO):**
+  1. Usuario ingresa texto Braille
+  2. Controller → InverseBrailleMapper.transcribirAEspanol()
+  3. Retorna texto español
+  
+  **Espejo (NUEVO):**
+  1. Usuario ingresa texto español
+  2. Controller → BrailleMapper.transcribirEnEspejo()
+  3. Retorna Braille en espejo (RTL + reflejado)
+end note
+
+legend right
+  |= Símbolo |= Significado |
+  | <<NUEVO>> | Clase o método nuevo en v2.0 |
+  | <<MODIFICADO>> | Clase modificada en v2.0 |
+  | <color:red>Línea roja</color> | Nueva relación en v2.0 |
+endlegend
+
+@enduml

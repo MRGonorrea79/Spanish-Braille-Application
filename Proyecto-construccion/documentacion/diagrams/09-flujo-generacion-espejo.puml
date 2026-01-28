@@ -1,0 +1,109 @@
+@startuml Flujo de Generación de Espejo
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+title Generación de Braille en Espejo para Escritura Manual\nSegunda Iteración
+
+participant Usuario
+participant "Navegador" as Browser
+participant "TranscriptionController" as Controller
+participant "BrailleMapper" as Mapper
+
+Usuario -> Browser: Accede a /espejo\nO marca checkbox "Generar espejo"
+Browser -> Controller: GET /espejo
+Controller --> Browser: Retorna index.html con opción espejo
+Browser --> Usuario: Muestra formulario
+
+Usuario -> Browser: Ingresa "hola"
+Usuario -> Browser: Click "Transcribir con Espejo"
+Browser -> Controller: POST /transcribir-espejo\ntexto="hola"
+
+Controller -> Mapper: transcribir("hola")
+activate Mapper
+Mapper --> Controller: brailleNormal = "⠓⠕⠇⠁"
+deactivate Mapper
+
+Controller -> Mapper: transcribirEnEspejo("hola")
+activate Mapper
+
+Mapper -> Mapper: brailleNormal = transcribir("hola")
+note right
+  Primero obtener
+  transcripción normal
+end note
+
+Mapper -> Mapper: convertirAEspejo(brailleNormal)
+activate Mapper
+
+Mapper -> Mapper: 1. Invertir orden de caracteres (RTL)
+note right
+  "⠓⠕⠇⠁" → "⠁⠇⠕⠓"
+  (String.reverse())
+end note
+
+Mapper -> Mapper: 2. Reflejar cada carácter horizontalmente
+
+loop Para cada carácter Braille
+    Mapper -> Mapper: mask = char - 0x2800
+    Mapper -> Mapper: reflejarMascaraHorizontal(mask)
+    
+    note right of Mapper
+      **Reflexión de puntos:**
+      Puntos Braille: 1 4    →  Espejo: 4 1
+                      2 5             5 2
+                      3 6             6 3
+      
+      Ejemplo: ⠓ (1,2,5)
+      • Punto 1 → Punto 4
+      • Punto 2 → Punto 5
+      • Punto 5 → Punto 2
+      Resultado: ⠚ (2,4,5)
+    end note
+    
+    Mapper -> Mapper: mascaraEspejo = intercambiar puntos
+    Mapper -> Mapper: char espejoChar = (char)(0x2800 + mascaraEspejo)
+    Mapper -> Mapper: Append al StringBuilder
+end
+
+Mapper --> Mapper: brailleEspejo = "⠚⠮⠕⠂"
+deactivate Mapper
+
+Mapper --> Controller: Retorna brailleEspejo
+deactivate Mapper
+
+Controller -> Controller: model.addAttribute("textoOriginal", "hola")
+Controller -> Controller: model.addAttribute("brailleNormal", "⠓⠕⠇⠁")
+Controller -> Controller: model.addAttribute("brailleEspejo", "⠚⠮⠕⠂")
+Controller --> Browser: Retorna result-espejo.html
+
+Browser --> Usuario: Muestra resultado:\n\n**Para lectura (normal):**\n⠓⠕⠇⠁\n\n**Para escritura manual (espejo):**\n⠚⠮⠕⠂ (RTL)
+
+note over Browser, Usuario
+  **Visualización en HTML:**
+  • Texto normal: direction: ltr
+  • Texto espejo: direction: rtl
+  • Fuente Braille especial
+  • Instrucciones de uso
+  
+  **Impresión:**
+  • CSS @media print mantiene RTL
+  • Fondo blanco, bordes negros
+  • Instrucciones visibles en pantalla,
+    ocultas en impresión
+end note
+
+Usuario -> Browser: Click "Imprimir"
+Browser -> Browser: window.print()
+
+note right of Browser
+  **Uso del papel impreso:**
+  1. Colocar papel sobre superficie blanda
+  2. Usar punzón y regleta
+  3. Perforar de derecha a izquierda
+  4. Seguir el texto en espejo
+  5. Dar vuelta el papel
+  6. ¡Braille legible en relieve!
+end note
+
+@enduml

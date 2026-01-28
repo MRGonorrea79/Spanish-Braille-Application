@@ -1,0 +1,78 @@
+@startuml Flujo de Transcripción Inversa
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+
+title Flujo de Transcripción Inversa (Braille → Español)\nSegunda Iteración
+
+participant Usuario
+participant "Navegador" as Browser
+participant "TranscriptionController" as Controller
+participant "InverseBrailleMapper" as Inverse
+participant "Map<Integer,String>" as ReverseMap
+
+Usuario -> Browser: Accede a /inverso
+Browser -> Controller: GET /inverso
+Controller --> Browser: Retorna index-inverso.html
+Browser --> Usuario: Muestra formulario de entrada Braille
+
+Usuario -> Browser: Ingresa "⠠⠓⠕⠇⠁"
+Usuario -> Browser: Click "Transcribir a Español"
+Browser -> Controller: POST /transcribir-inverso\ntextoBraille="⠠⠓⠕⠇⠁"
+
+Controller -> Inverse: transcribirAEspanol("⠠⠓⠕⠇⠁")
+
+activate Inverse
+
+note right of Inverse
+  **Procesamiento carácter por carácter:**
+  1. ⠠ → Detectar SIGNO_MAYUSCULA
+  2. ⠓ → "h" (con mayúscula pendiente)
+  3. ⠕ → "o"
+  4. ⠇ → "l"
+  5. ⠁ → "a"
+end note
+
+Inverse -> Inverse: char[] chars = brailleText.toCharArray()
+Inverse -> Inverse: boolean nextIsUppercase = false
+
+loop Para cada carácter Braille
+    Inverse -> Inverse: int mask = char - 0x2800
+    
+    alt Es SIGNO_MAYUSCULA (⠠)
+        Inverse -> Inverse: nextIsUppercase = true
+    else Es SIGNO_NUMERO (⠼)
+        Inverse -> Inverse: inNumber = true
+    else Es carácter normal
+        Inverse -> ReverseMap: get(mask)
+        ReverseMap --> Inverse: Retorna carácter español
+        
+        alt nextIsUppercase == true
+            Inverse -> Inverse: char.toUpperCase()
+            Inverse -> Inverse: nextIsUppercase = false
+        end
+        
+        Inverse -> Inverse: Append al StringBuilder
+    end
+end
+
+Inverse --> Controller: Retorna "Hola"
+
+deactivate Inverse
+
+Controller -> Controller: model.addAttribute("resultadoEspanol", "Hola")
+Controller -> Controller: model.addAttribute("textoBrailleOriginal", "⠠⠓⠕⠇⠁")
+Controller --> Browser: Retorna result-inverso.html
+
+Browser --> Usuario: Muestra resultado:\nBraille: ⠠⠓⠕⠇⠁\nEspañol: Hola
+
+note over Usuario, ReverseMap
+  **Características clave:**
+  • Detección de signos especiales (mayúscula, número)
+  • Mapeo inverso usando reverseMap
+  • Manejo de estado durante parsing
+  • Soporte para vocales acentuadas
+  • Validación de entrada Unicode Braille
+end note
+
+@enduml

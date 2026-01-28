@@ -1,0 +1,129 @@
+@startuml Arquitectura Segunda Iteracion
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+title Arquitectura del Sistema - Segunda Iteracion\nSpanish Braille Application v2.0
+
+package "CAPA DE PRESENTACION" as presentation #LightGreen {
+    component "Templates Thymeleaf" as templates {
+        [index.html]
+        [result.html]
+        [result-espanol.html]
+        [result-braille.html]
+        [result-espejo.html]
+        [styles.css]
+    }
+}
+
+package "CAPA DE CONTROL" as control #LightYellow {
+    component "TranscriptionController" {
+        [GET /]
+        [POST /transcribir-Espanol]
+        [POST /transcribir-Braille]
+        [POST /espejo]
+    }
+}
+
+package "CAPA DE SERVICIO" as service #LightCoral {
+    component "BrailleMapper" as mapper {
+        + espanolABraille(String) : String
+        + brailleAEspanol(String) : String
+        + espanolABrailleEspejo(String) : String
+        - brailleCharToMask(char) : int
+        - letraANumero(String) : String
+        - isFullUppercaseWord(String) : boolean
+    }
+    
+    component "BrailleDictionary" as dictionary {
+        - map : Map<String, Integer>
+        - reverseMap : Map<Integer, String>
+        - pam : Map<String, Integer>
+        + getMap() : Map
+        + getReverseMap() : Map
+        + getMapEspejo() : Map
+        - initLetters() : void
+        - initAccents() : void
+        - initPunctuation() : void
+        - initNumbers() : void
+        - initReverseMap() : void
+    }
+    
+    component "EspanolMapper" as espanol {
+        - reverseMap : Map<Integer, String>
+        + transcribirAEspanol(String) : String
+    }
+}
+
+' Relaciones
+templates -down-> TranscriptionController : HTTP Requests
+TranscriptionController -down-> mapper : uses
+mapper --> dictionary : uses
+dictionary -[hidden]right- espanol
+
+' Notas explicativas
+note right of TranscriptionController
+  **Endpoints:**
+  • GET / : Formulario principal
+  • POST /transcribir-Espanol : Espanol a Braille
+  • POST /transcribir-Braille : Braille a Espanol
+  • POST /espejo : Espanol a Braille espejo
+  
+  **Vistas retornadas:**
+  • index.html (formulario)
+  • result-espanol.html
+  • result-braille.html
+  • result-espejo.html
+end note
+
+note right of mapper
+  **BrailleMapper - Servicio Integrado**
+  
+  **Metodos principales:**
+  • espanolABraille() : Convierte texto espanol a Braille Unicode
+  • brailleAEspanol() : Convierte Braille Unicode a texto espanol
+  • espanolABrailleEspejo() : Genera version espejo para escritura manual
+  
+  **Caracteristicas:**
+  - Manejo de mayusculas palabra completa
+  - Modo numero con signo especial
+  - Espejo con inversion total (sb.reverse())
+  - Usa BrailleDictionary para todos los mapeos
+end note
+
+note right of dictionary
+  **BrailleDictionary - Repositorio de Mapeos**
+  
+  **3 Mapas principales:**
+  • map : Espanol a Braille (normal)
+  • reverseMap : Braille a Espanol
+  • pam : Espanol a Braille (espejo reflejado)
+  
+  **Signos especiales:**
+  - SIGNO_MAYUSCULA normal y espejo
+  - SIGNO_NUMERO normal y espejo
+  
+  Inicializa 60+ caracteres al construir
+end note
+
+note bottom of espanol
+  **EspanolMapper**
+  Clase alternativa mantenida
+  por compatibilidad.
+  No se usa en la implementacion principal.
+end note
+
+legend right
+  |= Color |= Significado |
+  | <#LightGreen> | Capa de Presentacion |
+  | <#LightYellow> | Capa de Control |
+  | <#LightCoral> | Capa de Servicio |
+  
+  **Arquitectura v2.0:**
+  - BrailleMapper integrado (3 funciones en 1 clase)
+  - BrailleDictionary maneja 3 mapeos
+  - Espejo con sb.reverse() + mapa pam
+endlegend
+
+@enduml

@@ -254,7 +254,7 @@ mvn test
 
 Los resultados se generan en `target/surefire-reports/`.
 
-### Resultados de la última ejecución (29/01/2026 - Rama ITERACION-2)
+### Resultados de la última ejecución 
 
 ```
 [INFO] -------------------------------------------------------

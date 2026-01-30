@@ -2,11 +2,7 @@
 
 ## 📋 Descripción
 
-**Spanish-Braille-Application** es una aplicación web desarrollada en Spring Boot que permite convertir texto en español a su representación en Braille Unicode. El sistema soporta el alfabeto español completo, incluyendo acentos, la letra ñ, mayúsculas, números y signos de puntuación, con normalización automática de espacios.
-
-### 🎯 Propósito
-
-Este proyecto fue desarrollado como parte de la materia de **Construcción de Software** y tiene como objetivo proporcionar una herramienta accesible y funcional para la transcripción de textos al sistema Braille, facilitando la inclusión y accesibilidad educativa.
+**Spanish-Braille-Application** es una aplicación web desarrollada en Spring Boot que convierte texto en español a Braille Unicode. Soporta el alfabeto español completo (incluyendo ñ, ü, vocales acentuadas), mayúsculas, números y puntuación básica. El sistema normaliza espacios y ofrece una interfaz web intuitiva y accesible.
 
 ---
 
@@ -89,23 +85,20 @@ Spanish-Braille-Application/
 ### Instalación y Ejecución
 
 1. **Clonar el repositorio**
-   ```bash
+   ```powershell
    git clone https://github.com/tu-usuario/Spanish-Braille-Application.git
    cd Spanish-Braille-Application/Proyecto-construccion
    ```
-
 2. **Compilar el proyecto**
-   ```bash
+   ```powershell
    ./mvnw clean install
    # En Windows: mvnw.cmd clean install
    ```
-
 3. **Ejecutar la aplicación**
-   ```bash
+   ```powershell
    ./mvnw spring-boot:run
    # En Windows: mvnw.cmd spring-boot:run
    ```
-
 4. **Acceder a la aplicación**
    - Abrir el navegador en: `http://localhost:8080`
 
@@ -113,16 +106,15 @@ Spanish-Braille-Application/
 
 ## 📖 Uso
 
-1. **Ingresar texto**: En la página principal, escriba o pegue el texto en español que desea transcribir
-2. **Transcribir**: Presione el botón "Transcribir"
-3. **Ver resultado**: El sistema mostrará el texto original y su equivalente en Braille Unicode
-4. **Imprimir** (opcional): Use el botón "Imprimir" para generar una copia física
+1. **Ingresar texto**: En la página principal, escriba o pegue el texto en español que desea transcribir.
+2. **Transcribir**: Presione el botón "Transcribir".
+3. **Ver resultado**: El sistema mostrará el texto original y su equivalente en Braille Unicode.
+4. **Imprimir** (opcional): Use el botón "Imprimir" para generar una copia física.
 
 ### Ejemplo
 
-**Entrada**: `¡Hola, mundo! 123`
-
-**Salida**: `⠠⠓⠕⠇⠁⠂ ⠍⠥⠝⠙⠕⠖ ⠼⠁⠃⠉`
+- **Entrada:** `¡Hola, mundo! 123`
+- **Salida esperada:** ⠨⠓⠕⠇⠁⠂⠀⠍⠥⠝⠙⠕⠖⠀⠼⠁⠃⠉
 
 ---
 
@@ -130,7 +122,7 @@ Spanish-Braille-Application/
 
 El proyecto incluye una suite completa de pruebas unitarias:
 
-```bash
+```powershell
 ./mvnw test
 ```
 
@@ -149,10 +141,10 @@ El proyecto incluye una suite completa de pruebas unitarias:
 
 ## 📚 Documentación Adicional
 
-- **[Manual de Usuario](MANUAL_USUARIO.md)**: Guía completa para usuarios finales
-- **[Manual Técnico](MANUAL_TECNICO.md)**: Documentación para desarrolladores
+- **[Manual de Usuario](Proyecto-construccion/documentacion/manual-usuario.md)**: Guía completa para usuarios finales
+- **[Manual Técnico](Proyecto-construccion/documentacion/entorno-desarrollo.md)**: Documentación para desarrolladores
 - **[Guía de Instalación](Proyecto-construccion/documentacion/manual-de-instalacion.md)**: Instrucciones detalladas de instalación
-- **[Arquitectura](ARQUITECTURA.md)**: Diseño y patrones del sistema
+- **[Diseño Arquitectónico](Proyecto-construccion/documentacion/diseno-arquitectonico.md)**: Diseño y patrones del sistema
 
 ---
 
@@ -161,7 +153,7 @@ El proyecto incluye una suite completa de pruebas unitarias:
 El proyecto sigue el patrón **MVC (Model-View-Controller)**:
 
 - **Model**: `BrailleMapper` - Lógica de negocio para la conversión
-- **View**: Templates Thymeleaf (index.html, result.html)
+- **View**: Plantillas Thymeleaf (`index.html`, `result.html`)
 - **Controller**: `TranscriptionController` - Maneja las peticiones HTTP
 
 ### Componentes principales:
@@ -237,4 +229,4 @@ Este proyecto permitió aplicar los siguientes conceptos de Construcción de Sof
 
 **¡Gracias por usar Spanish-Braille-Application!** 🎉
 
-
+**Fecha de actualización:** 30/01/2026

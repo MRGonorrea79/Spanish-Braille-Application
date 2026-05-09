@@ -1,0 +1,78 @@
+<!-- arithmetic-operations.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Arithmetic Operations</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<div class="sidebar">
+
+    <div class="logo">
+        Conversor
+    </div>
+
+    <a href="/" class="nav-link">
+        <span>Dashboard</span>
+    </a>
+
+    <a href="/arithmetic-operations" class="nav-link active">
+        <span>Fase 4</span>
+    </a>
+
+</div>
+
+<div class="main-content">
+
+    <div class="topbar">
+
+        <h1>Operaciones Binarias</h1>
+
+    </div>
+
+    <div class="form-card">
+
+        <h3>
+            Suma y Resta
+        </h3>
+
+        <form action="/aritmetica/operar" method="post">
+
+            <input type="text" class="form-control" name="bin1" placeholder="Primer número binario">
+
+            <br><br>
+            <input type="text" class="form-control" name="bin2" placeholder="Segundo número binario">
+
+            <br><br>
+
+            <select name="operacion" class="form-control">
+
+                <option value="suma">Suma</option>
+
+                <option value="resta">Resta</option>
+
+            </select>
+            <br><br>
+            <button class="btn-custom btn-primary-custom">Resolver</button>
+
+        </form>
+        <br>
+        <table class="custom-table">
+            <thead>
+            <tr>
+                <th>Resultado</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${resultado}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

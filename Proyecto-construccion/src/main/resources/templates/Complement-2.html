@@ -1,0 +1,77 @@
+<!-- Complement-2.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Complemento a Dos</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="logo">
+        Conversor
+    </div>
+    <a href="/" class="nav-link">
+        <span>Dashboard</span>
+    </a>
+    <a href="/Complement-2" class="nav-link active">
+        <span>Fase 3</span>
+    </a>
+</div>
+<div class="main-content">
+    <div class="topbar">
+
+        <h1>Complemento a Dos</h1>
+
+    </div>
+    <div class="form-card">
+
+        <h3>Conversión Ca2</h3>
+
+        <form action="/ca2/convertir" method="post">
+
+            <input type="number" class="form-control" name="numero" placeholder="Ingrese número decimal">
+
+            <br><br>
+
+            <select name="bits" class="form-control">
+
+                <option value="8">8 bits</option>
+                <option value="16">16 bits</option>
+                <option value="32">32 bits</option>
+
+            </select>
+            <br><br>
+
+            <button class="btn-custom btn-primary-custom">Convertir</button>
+
+        </form>
+        <br>
+
+        <table class="custom-table">
+            <thead>
+            <tr>
+                <th>Representación</th>
+                <th>Resultado</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr>
+                <td>Complemento a 2</td>
+                <td th:text="${ca2}"></td>
+            </tr>
+
+            <tr>
+                <td>Decimal Recuperado</td>
+                <td th:text="${decimal}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

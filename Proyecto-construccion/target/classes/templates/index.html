@@ -1,29 +1,104 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <title>Transcriptor Español → Braille</title>
+    <meta charset="UTF-8">
+    <title>Dashboard Conversor</title>
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-<main>
-    <h1>Transcriptor Español → Braille</h1>
 
-    <form action="/transcribir" method="post">
-        <label for="text">Texto (incluye números, acentos, signos):</label><br/>
-        <textarea id="text" name="texto" rows="6" cols="60">Ejemplo: ¡Hola, mundo! 123</textarea><br/>
+<div class="sidebar">
 
-        <button type="submit">Transcribir</button>
-    </form>
+    <div class="logo">Conversor</div>
 
-    <section>
-        <h2>Instrucciones</h2>
-        <ul>
-            <li>Las vocales acentuadas se asignan al mismo grafema que la vocal base.</li>
-            <li>Los números: el sistema agrega automáticamente el signo de número.</li>
-            <li>Se puede imprimir la página de resultado.</li>
-        </ul>
-    </section>
-</main>
+    <a href="/" class="nav-link active"><span>Dashboard</span></a>
+
+    <a href="/decimal-transformation" class="nav-link"><span>Fase 1</span>
+    </a>
+
+    <a href="/other-transformation" class="nav-link"><span>Fase 2</span>
+    </a>
+
+    <a href="/Complement-2" class="nav-link"><span>Fase 3</span>
+    </a>
+
+    <a href="/arithmetic-operations" class="nav-link"><span>Fase 4</span>
+    </a>
+
+</div>
+
+<div class="main-content">
+    <div class="topbar">
+        <h1>Dashboard Principal</h1>
+    </div>
+
+    <div class="dashboard-cards">
+        <a href="/decimal-transformation" style="text-decoration:none;">
+            <div class="dashboard-card">
+
+                <h5>Fase 1</h5>
+                <h2>Decimal</h2>
+                <p>Conversión decimal a binario, octal y hexadecimal.</p>
+
+                <div class="mini-bars">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </a>
+        <a href="/other-transformation" style="text-decoration:none;">
+            <div class="dashboard-card">
+
+                <h5>Fase 2</h5>
+                <h2>Octal, binario, hexadecimal.</h2>
+                <p>Conversión de binario, octal y hexadecimal a decimal.</p>
+
+                <div class="mini-bars">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </a>
+
+        <a href="/Complement-2" style="text-decoration:none;">
+
+            <div class="dashboard-card">
+
+                <h5>Fase 3</h5>
+                <h2>Ca2</h2>
+                <p>Representación usando complemento a dos.</p>
+
+                <div class="mini-bars">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+
+            </div>
+
+        </a>
+
+        <a href="/arithmetic-operations" style="text-decoration:none;">
+            <div class="dashboard-card">
+
+                <h5>Fase 4</h5>
+                <h2> Binario </h2>
+                <p>Suma y resta binaria.</p>
+
+                <div class="mini-bars">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
 </body>
 </html>

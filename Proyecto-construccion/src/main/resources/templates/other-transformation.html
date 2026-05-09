@@ -1,0 +1,72 @@
+<!-- other-transformation.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Other Transformation</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<div class="sidebar">
+
+    <div class="logo">
+        Conversor
+    </div>
+
+    <a href="/" class="nav-link">
+        <span>Dashboard</span>
+    </a>
+
+    <a href="/other-transformation" class="nav-link active">
+        <span>Fase 2</span>
+    </a>
+
+</div>
+
+<div class="main-content">
+
+    <div class="topbar">
+
+        <h1>Otras Bases a Decimal</h1>
+    </div>
+    <div class="form-card">
+
+        <h3>Conversión</h3>
+
+        <form action="/otrasBases/convertir" method="post">
+            <input type="text" class="form-control" name="numero" placeholder="Ingrese número">
+
+            <br><br>
+
+            <select name="base" class="form-control">
+
+                <option value="2">Binario</option>
+
+                <option value="8">Octal</option>
+
+                <option value="16">Hexadecimal</option>
+
+            </select>
+
+            <br><br>
+            <button class="btn-custom btn-primary-custom">Convertir</button>
+        </form>
+        <br>
+
+        <table class="custom-table">
+
+            <thead>
+            <tr><th>Resultado Decimal</th></tr>
+
+            </thead>
+            <tbody>
+            <tr><td th:text="${decimal}"></td></tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

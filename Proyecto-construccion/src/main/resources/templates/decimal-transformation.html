@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Decimal Transformation</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<div class="sidebar">
+
+    <div class="logo">Conversor</div>
+
+    <a href="/" class="nav-link"><span>Dashboard</span></a>
+
+    <a href="/decimal-transformation" class="nav-link active"><span>Fase 1</span></a>
+</div>
+
+<div class="main-content">
+    <div class="topbar">
+        <h1>Decimal a Otras Bases</h1>
+    </div>
+
+    <div class="form-card">
+
+        <h3>Conversión Decimal</h3>
+
+        <form action="/decimal/convertir" method="post">
+            <input type="number" class="form-control" name="numero" placeholder="Ingrese número decimal">
+            <br><br>
+            <button class="btn-custom btn-primary-custom">Convertir</button>
+
+        </form>
+        <br>
+        <table class="custom-table">
+            <thead>
+            <tr>
+                <th>Base</th>
+                <th>Resultado</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Binario</td>
+                <td th:text="${binario}"></td>
+            </tr>
+            <tr>
+                <td>Octal</td>
+                <td th:text="${octal}"></td>
+            </tr>
+            <tr>
+                <td>Hexadecimal</td>
+                <td th:text="${hexadecimal}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
